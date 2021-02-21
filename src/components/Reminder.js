@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core"
 import axios from "axios"
+import { parseISO } from "date-fns"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { EDIT_REMINDER } from "../store/calendarReducer"
@@ -30,14 +31,18 @@ export default function Reminder ({ open, setOpen }) {
 
     const newReminder = {
       ...reminder,
-      date: reminder.date.toString(),
+      date: parseISO(reminder.date).toString(),
       forecast: `${data.list[dateDiff].weather[0].description}`,
       temperature: `${Math.floor(data.list[dateDiff].temp.day - 273)}`
     }
-    console.log('newReminder', newReminder)
-    //dispatch({type: EDIT_REMINDER, payload: newReminder })
+    dispatch({type: EDIT_REMINDER, payload: newReminder })
+    closeModal()
     
-    
+  }
+
+  const closeModal = () => {
+    setOpen(false)
+    setEditMode(false)
   }
 
  
@@ -46,7 +51,7 @@ export default function Reminder ({ open, setOpen }) {
       return (
         <Dialog
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => closeModal()}
         >
           <ViewReminder 
             open={open}
@@ -60,7 +65,7 @@ export default function Reminder ({ open, setOpen }) {
       return (
         <Dialog
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => closeModal()}
         >
           <EditReminder 
             open={open}

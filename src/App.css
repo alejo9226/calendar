@@ -271,8 +271,14 @@ main {
   flex: 1;
 }
 
+.value__color {
+}
+
 .value__description__input {
   flex: 1;
+}
+
+.value__color__input {
 }
 
 .temp {
