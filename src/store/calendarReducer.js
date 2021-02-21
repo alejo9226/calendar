@@ -95,11 +95,20 @@ function calendarReducer(state = initialState, action) {
         ...state,
         currentReminder: null
       }
-    case EDIT_REMINDER:
+    /* case EDIT_REMINDER:
+      const { id } = action.payload
+      const currentReminder = state.reminders[date].findIndex(reminder => reminder.id === id)
+      console.log('currentReminder', currentReminder)
+      if (state.reminders[date][currentReminder].date !== action.payload.date) {
+        const newReminders = state.reminders[date].splice(currentReminder, 1)
+      }
+      state.reminders[date].filter(reminder => {
+
+      })
       return {
         ...state,
-        currentReminder: null
-      }
+        reminders: {[date]: [...state.reminders[date], action.payload]}
+      } */
     default:
       return state
   }

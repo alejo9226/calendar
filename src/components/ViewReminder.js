@@ -43,7 +43,8 @@ export default function ViewReminder ({ open, setOpen, setEditMode }) {
             justifyContent: 'space-between',
             alignItems: 'baseline',
             padding: '0 10px',
-            marginTop: '20px'
+            marginTop: '20px',
+            marginBottom: '10px'
           }}
         >
           <div
@@ -63,7 +64,9 @@ export default function ViewReminder ({ open, setOpen, setEditMode }) {
             }}
           >
             <span className="key">Time</span>
-            <span className="value">{currentReminder?.time}</span>
+            <span 
+              className="value"
+            >{currentReminder?.time && currentReminder.time.length === 3 ? `${currentReminder.time.charAt(0)}:${currentReminder.time.substr(currentReminder.time.length - 2)}` : `${currentReminder.time.substr(0, 2)}:${currentReminder.time.substr(currentReminder.time.length - 2)}`}</span>
           </div>
         </div>
         <div
@@ -85,6 +88,17 @@ export default function ViewReminder ({ open, setOpen, setEditMode }) {
           >
             <span className="key">Description</span>
             <span className="value__description">{currentReminder?.description}</span>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              alignItems: 'baseline',
+              margin: '0px 0'
+            }}
+          >
+            <span className="key">Color</span>
+            <span className="value">{currentReminder?.color}</span>
           </div>
           <button className="edit__button" onClick={() => setEditMode(true)}>Editar</button>
         </div>

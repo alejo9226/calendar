@@ -29,7 +29,7 @@ export default function EditReminder ({ editReminder, reminder, open, setOpen })
     setErrors(errs)
     
     if (!errs) {
-      editReminder(formValues)
+      editReminder({...formValues, id: currentReminder.id})
       reset()
     }
   }
@@ -70,7 +70,7 @@ export default function EditReminder ({ editReminder, reminder, open, setOpen })
         }}
       >
         <div
-            style={{
+          style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'baseline',
@@ -119,7 +119,7 @@ export default function EditReminder ({ editReminder, reminder, open, setOpen })
                       value={hour.replace(':', '')} 
                       key={hour}
                     >
-                      {hour}
+                      {hour.length === 3 ? `${hour.charAt(0)}:${hour.substr(hour.length - 2)}` : `${hour.substr(0, 2)}:${hour.substr(hour.length - 2)}`}
                     </option>
                   )
                 })}
@@ -133,6 +133,7 @@ export default function EditReminder ({ editReminder, reminder, open, setOpen })
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             padding: '0 10px',
+            marginTop: '10px'
           }}
         >
           <div
@@ -140,7 +141,7 @@ export default function EditReminder ({ editReminder, reminder, open, setOpen })
               display: 'flex',
               width: '100%',
               alignItems: 'baseline',
-              margin: '10px 0'
+              margin: '10px 0',
             }}
           >
             <span className="key">Description</span>
@@ -153,6 +154,39 @@ export default function EditReminder ({ editReminder, reminder, open, setOpen })
               onChange={handleInputChange} 
               required
             />
+           
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              alignItems: 'baseline',
+            }}
+          >
+            <span className="key">Color</span>
+            <select
+              type='text'
+              name='color'
+              id='color'
+              value={color}
+              onChange={handleInputChange}
+              required
+            >
+              <option>Choose color</option>
+              {!!colors &&
+                colors.length > 0 &&
+                colors.map((color) => {
+                  return (
+                    <option 
+                      value={color.name} 
+                      key={color.name}
+                      style={{ backgroundColor: color.color }}
+                    >
+                      {color.name}
+                    </option>
+                  )
+                })}
+            </select>
           </div>
           <button className="edit__button" type="submit">Actualizar</button>
           {errors && <p className="contentInput__error">{errors}</p>}

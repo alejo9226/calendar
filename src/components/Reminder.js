@@ -27,10 +27,10 @@ export default function Reminder ({ open, setOpen }) {
     })
 
     const dateDiff = new Date(reminder.date).getDate() - new Date().getDate()
-
+    console.log('fecha ', new Date(reminder.date))
     const newReminder = {
       ...reminder,
-      date: reminder.date.toString(),
+      date: new Date(reminder.date).toString(),
       forecast: `${data.list[dateDiff].weather[0].description}`,
       temperature: `${Math.floor(data.list[dateDiff].temp.day - 273)}`
     }
@@ -40,13 +40,18 @@ export default function Reminder ({ open, setOpen }) {
     
   }
 
+  const closeModal = () => {
+    setOpen(false)
+    setEditMode(false)
+  }
+
  
 
     if (!editMode) {
       return (
         <Dialog
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => closeModal()}
         >
           <ViewReminder 
             open={open}
@@ -60,7 +65,7 @@ export default function Reminder ({ open, setOpen }) {
       return (
         <Dialog
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => closeModal()}
         >
           <EditReminder 
             open={open}
