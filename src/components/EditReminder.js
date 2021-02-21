@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core"
 import { useState } from "react"
 import { useSelector } from "react-redux"
-import { formatShortDate } from '../utils/formatDate'
+import { formatShortDate, formatTime } from '../utils/formatDate'
 import { useForm } from "../utils/hooks/useForm"
 import { validateForm } from "../utils/validations"
 
@@ -33,7 +33,6 @@ export default function EditReminder ({ editReminder, reminder, open, setOpen })
       reset()
     }
   }
-
   return (
     <form className="view-modal" onSubmit={updateReminder}>
       <div
@@ -116,10 +115,10 @@ export default function EditReminder ({ editReminder, reminder, open, setOpen })
                 hours.map((hour) => {
                   return (
                     <option 
-                      value={hour.replace(':', '')} 
+                      value={hour} 
                       key={hour}
                     >
-                      {hour.length === 3 ? `${hour.charAt(0)}:${hour.substr(hour.length - 2)}` : `${hour.substr(0, 2)}:${hour.substr(hour.length - 2)}`}
+                      {hour}
                     </option>
                   )
                 })}

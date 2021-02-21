@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, setRef } from "@material-ui/core"
 import { useState } from "react"
 import { useSelector } from "react-redux"
-import { formatShortDate } from '../utils/formatDate'
+import { formatShortDate, formatTime } from '../utils/formatDate'
 import { useForm } from "../utils/hooks/useForm"
 
 export default function ViewReminder ({ open, setOpen, setEditMode }) {
@@ -9,7 +9,6 @@ export default function ViewReminder ({ open, setOpen, setEditMode }) {
   const { currentReminder } = useSelector(({ calendarReducer: { currentReminder } }) => {
     return { currentReminder }
   })
-  
   return (
     <div className="view-modal">
       <div
@@ -66,7 +65,7 @@ export default function ViewReminder ({ open, setOpen, setEditMode }) {
             <span className="key">Time</span>
             <span 
               className="value"
-            >{currentReminder?.time && currentReminder.time.length === 3 ? `${currentReminder.time.charAt(0)}:${currentReminder.time.substr(currentReminder.time.length - 2)}` : `${currentReminder.time.substr(0, 2)}:${currentReminder.time.substr(currentReminder.time.length - 2)}`}</span>
+            >{currentReminder?.time}</span>
           </div>
         </div>
         <div

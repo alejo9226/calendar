@@ -52,7 +52,7 @@ const initialState = {
   colors,
   currentMonth: new Date(),
   selectedDate: new Date(),
-  reminders: {},
+  reminders: [],
   currentReminder: null
 }
 
@@ -74,41 +74,32 @@ function calendarReducer(state = initialState, action) {
         selectedDate: action.payload
       }
     case SET_REMINDER:
-      const { date } = action.payload
-      if (state.reminders[date]) {
-        return {
-          ...state,
-          reminders: {[date]: [...state.reminders[date], action.payload]}
-        }
+      return {
+        ...state,
+        reminders: [...state.reminders, action.payload]
       }
-      return {
-        ...state,
-        reminders: {[date]: [action.payload]}
-      } 
     case SET_CURRENT_REMINDER:
+      const current = state.reminders.findIndex(reminder => reminder.id === action.payload.id)
       return {
         ...state,
-        currentReminder: action.payload
+        currentReminder: state.reminders[current]
       }
     case CLEAR_CURRENT_REMINDER:
       return {
         ...state,
         currentReminder: null
       }
-    /* case EDIT_REMINDER:
+    case EDIT_REMINDER:
       const { id } = action.payload
-      const currentReminder = state.reminders[date].findIndex(reminder => reminder.id === id)
-      console.log('currentReminder', currentReminder)
-      if (state.reminders[date][currentReminder].date !== action.payload.date) {
-        const newReminders = state.reminders[date].splice(currentReminder, 1)
-      }
-      state.reminders[date].filter(reminder => {
-
-      })
+      ('action.payload.date', action.payload.date)
+      const currentReminder = state.reminders.findIndex(reminder => reminder.id === id)
+      const stateCopy = [...state.reminders]
+      stateCopy.splice(currentReminder, 1, action.payload)
+     
       return {
         ...state,
-        reminders: {[date]: [...state.reminders[date], action.payload]}
-      } */
+        reminders: [...stateCopy]
+      }
     default:
       return state
   }

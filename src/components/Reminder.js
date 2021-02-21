@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core"
 import axios from "axios"
+import { parseISO } from "date-fns"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { EDIT_REMINDER } from "../store/calendarReducer"
@@ -27,16 +28,15 @@ export default function Reminder ({ open, setOpen }) {
     })
 
     const dateDiff = new Date(reminder.date).getDate() - new Date().getDate()
-    console.log('fecha ', new Date(reminder.date))
+
     const newReminder = {
       ...reminder,
-      date: new Date(reminder.date).toString(),
+      date: parseISO(reminder.date).toString(),
       forecast: `${data.list[dateDiff].weather[0].description}`,
       temperature: `${Math.floor(data.list[dateDiff].temp.day - 273)}`
     }
-    console.log('newReminder', newReminder)
-    //dispatch({type: EDIT_REMINDER, payload: newReminder })
-    
+    dispatch({type: EDIT_REMINDER, payload: newReminder })
+    closeModal()
     
   }
 

@@ -88,7 +88,6 @@ export default function Calendar () {
   }
 
   const onDateClick = day => {
-    console.log('day', day)
     dispatch({ type: SELECT_DAY, payload: day })
   };
 
@@ -170,7 +169,7 @@ export default function Calendar () {
                 hours.map((hour) => {
                   return (
                     <option 
-                      value={hour.replace(':', '')} 
+                      value={hour} 
                       key={hour}
                     >
                       {hour}
@@ -200,7 +199,6 @@ export default function Calendar () {
 
   const launchDialog = (e) => {
     
-    console.log('e', e)
     reset()
     setOpenDialog(true);
     setDateToAdd(e)
@@ -231,7 +229,6 @@ export default function Calendar () {
         forecast: `${data.list[dateDiff].weather[0].description}`,
         temperature: `${Math.floor(data.list[dateDiff].temp.day - 273)}`
       }
-  
       dispatch({type: SET_REMINDER, payload: newReminder })
       setOpenDialog(false)
     }
@@ -240,34 +237,33 @@ export default function Calendar () {
   }
 
   const showReminder = (reminder) => {
-    console.log('mostrar reminder', reminder)
     setViewReminder(true)
     dispatch({ type: SET_CURRENT_REMINDER, payload: reminder })
   }
 
-  const orderReminders = (reminders) => {
-    if (reminders.length < 2) return reminders
-
-    let orderedReminders = []
-    let parsedTime = reminders.map(reminder => {
-      reminder.time = parseInt(reminder.time)
-      return reminder
-    })
-
-    orderedReminders = parsedTime.sort((a, b) => a.time - b.time)
-    return orderedReminders
+  const orderReminders = (unorderedReminders) => {
+    if (unorderedReminders.length < 2) {
+      return unorderedReminders
+    } else {
+    
+      unorderedReminders.sort((a, b) => {
+        if (a.time < b.time) {
+          return -1
+        }
+        if (a.time > b.time) {
+          return 1
+        }
+        return 0
+      })
+      return unorderedReminders
+    }
   }
 
   const renderCells = () => {
-    //const monthStart = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
     const monthStart = startOfMonth(currentMonth);
-    //const monthEnd = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
     const monthEnd = endOfMonth(monthStart);
     const startDate = startOfWeek(monthStart);
-    console.log('startDate', startDate)
     const endDate = endOfWeek(monthEnd);
-    //const startDate = new Date(monthStart.setDate(monthStart.getDate() - monthStart.getDay()))
-    //const endDate = new Date(monthEnd.setDate(monthEnd.getDate() + 6 - monthEnd.getDay()))
 
     const dateFormat = "d";
     const rows = [];
@@ -304,9 +300,9 @@ export default function Calendar () {
                   style={{ color: 'grey', fontSize: '1.5rem' }}
                 />
               </IconButton>}
-            {reminders[cloneDay] && reminders[cloneDay].length > 0 && orderReminders(reminders[cloneDay]).map(reminder => {
+            {!!reminders && reminders.findIndex(reminder => reminder.date == cloneDay.toString()) !== -1 && 
+              orderReminders(reminders.filter(rem => rem.date == cloneDay.toString())).map(reminder => {
               if (reminder.date === cloneDay.toString()) {
-                console.log('recordatorio', reminder)
                 return (
                   <div 
                     className="reminder-outer-div"
@@ -339,10 +335,6 @@ export default function Calendar () {
 
     return <div className="body">{rows}</div>;
   }
-
-  
-  console.log('reminders', reminders)
-  console.log('currentReminder', currentReminder)
 
   return (
     <div className="calendar">
