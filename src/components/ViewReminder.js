@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { formatShortDate, formatTime } from '../utils/formatDate'
 import { useForm } from "../utils/hooks/useForm"
 
-export default function ViewReminder ({ open, setOpen, setEditMode }) {
+export default function ViewReminder ({ open, setOpen, setEditMode, setViewReminderMode }) {
 
   const { currentReminder } = useSelector(({ calendarReducer: { currentReminder } }) => {
     return { currentReminder }
@@ -99,7 +99,7 @@ export default function ViewReminder ({ open, setOpen, setEditMode }) {
             <span className="key">Color</span>
             <span className="value">{currentReminder?.color}</span>
           </div>
-          <button className="edit__button" onClick={() => setEditMode(true)}>Editar</button>
+          <button className="edit__button" onClick={() => setViewReminderMode('Edit')}>Editar</button>
         </div>
       </div>
     </div>

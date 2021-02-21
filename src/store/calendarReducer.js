@@ -1,18 +1,12 @@
 import thunk from 'redux-thunk'
-
 export const SET_NEXT_MONTH = 'SET_NEXT_MONTH'
 export const SET_PREV_MONTH = 'SET_PREV_MONTH'
 export const SELECT_DAY = 'SELECT_DAY'
 export const SET_REMINDER = 'SET_REMINDER'
 export const EDIT_REMINDER = 'EDIT_REMINDER'
+export const DELETE_REMINDERS = 'DELETE_REMINDERS'
 export const SET_CURRENT_REMINDER = 'SET_CURRENT_REMINDER'
 export const CLEAR_CURRENT_REMINDER = 'CLEAR_CURRENT_REMINDER'
-
-/* const rootReducer = combineReducers({ 
-  textReducer, 
-  countReducer, 
-  postReducer 
-}) */
 
 const colors = [
   {
@@ -91,7 +85,6 @@ function calendarReducer(state = initialState, action) {
       }
     case EDIT_REMINDER:
       const { id } = action.payload
-      ('action.payload.date', action.payload.date)
       const currentReminder = state.reminders.findIndex(reminder => reminder.id === id)
       const stateCopy = [...state.reminders]
       stateCopy.splice(currentReminder, 1, action.payload)
@@ -99,6 +92,13 @@ function calendarReducer(state = initialState, action) {
       return {
         ...state,
         reminders: [...stateCopy]
+      }
+    case DELETE_REMINDERS: 
+      const filteredReminders = state.reminders.filter(reminder => reminder.date !== action.payload)
+      console.log('filteredReminders', filteredReminders)
+      return {
+        ...state,
+        reminders: [...filteredReminders]
       }
     default:
       return state
