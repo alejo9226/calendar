@@ -1,17 +1,17 @@
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core"
+import { Dialog } from "@material-ui/core"
 import axios from "axios"
+import { parseISO } from "date-fns"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { EDIT_REMINDER } from "../store/calendarReducer"
-import { formatShortDate } from '../utils/formatDate'
-import { useForm } from "../utils/hooks/useForm"
-import { validateForm } from "../utils/validations"
+import CreateReminder from "./CreateReminder"
 import EditReminder from "./EditReminder"
 import ViewReminder from "./ViewReminder"
 
-export default function Reminder ({ open, setOpen }) {
+export default function Reminder ({ open, dateToAdd, setOpen, setOpenDialog, viewReminderMode, setViewReminderMode }) {
   
   const [editMode, setEditMode] = useState(false)
+  const [createMode, setCreateMode] = useState(false)
   const [errors, setErrors] = useState(null)
 
   const dispatch = useDispatch()
@@ -30,46 +30,53 @@ export default function Reminder ({ open, setOpen }) {
 
     const newReminder = {
       ...reminder,
-      date: reminder.date.toString(),
+      date: parseISO(reminder.date).toString(),
       forecast: `${data.list[dateDiff].weather[0].description}`,
       temperature: `${Math.floor(data.list[dateDiff].temp.day - 273)}`
     }
-    console.log('newReminder', newReminder)
-    //dispatch({type: EDIT_REMINDER, payload: newReminder })
-    
-    
+    dispatch({type: EDIT_REMINDER, payload: newReminder })
+    closeModal()
   }
 
- 
-
-    if (!editMode) {
-      return (
-        <Dialog
-          open={open}
-          onClose={() => setOpen(false)}
-        >
+  const closeModal = () => {
+    setViewReminderMode('')
+    setOpen(false)
+    setEditMode(false)
+  }
+    return (
+      <Dialog
+        open={open}
+        onClose={() => closeModal()}
+      >
+        {viewReminderMode === 'Create' ? 
+          <CreateReminder 
+            open={open}
+            setOpen={setOpen}
+            editMode={editMode}
+            setEditMode={setEditMode}
+            dateToAdd={dateToAdd}
+            setOpenDialog={setOpenDialog}
+          /> : viewReminderMode === 'View' ? 
           <ViewReminder 
             open={open}
             setOpen={setOpen}
             editMode={editMode}
             setEditMode={setEditMode}
-          />
-        </Dialog>
-      )
-    } else {
-      return (
-        <Dialog
-          open={open}
-          onClose={() => setOpen(false)}
-        >
+            dateToAdd={dateToAdd}
+            setOpenDialog={setOpenDialog}
+            setViewReminderMode={setViewReminderMode}
+          /> : viewReminderMode === 'Edit' ? 
           <EditReminder 
             open={open}
             setOpen={setOpen}
             editMode={editMode}
             setEditMode={setEditMode}
+            dateToAdd={dateToAdd}
+            setOpenDialog={setOpenDialog}
             editReminder={editReminder}
-          />
-        </Dialog>
-      )
-    }
+          /> : ''}
+      </Dialog>
+    )
+    
+   
 }

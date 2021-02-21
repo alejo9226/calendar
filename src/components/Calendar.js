@@ -13,44 +13,35 @@ import {
 } from "date-fns"
 import { useSelector, useDispatch } from 'react-redux'
 import { SET_NEXT_MONTH, SET_PREV_MONTH, SELECT_DAY } from '../store'
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
+import ControlPointIcon from '@material-ui/icons/ControlPoint'
+import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton, Dialog, DialogActions } from '@material-ui/core'
-import { useState } from "react";
-import { useForm } from "../utils/hooks/useForm";
-import { SET_CURRENT_REMINDER, SET_REMINDER } from "../store/calendarReducer";
+import { useState } from "react"
+import { useForm } from "../utils/hooks/useForm"
+import { DELETE_REMINDERS, SET_CURRENT_REMINDER, SET_REMINDER } from "../store/calendarReducer"
 import axios from 'axios'
-import { validateForm } from "../utils/validations";
-import Reminder from "./Reminder";
-import { v4 as uuidv4 } from 'uuid';
+import { validateForm } from "../utils/validations"
+import Reminder from "./Reminder"
+import { v4 as uuidv4 } from 'uuid'
 
 
 export default function Calendar () {
+
   const { 
     currentMonth, 
     selectedDate,
     reminders,
     currentReminder,
-    hours,
-    colors
-  } = useSelector(({ calendarReducer: { currentMonth, selectedDate, reminders, currentReminder, hours, colors } }) => {
-    return { currentMonth, selectedDate, reminders, currentReminder, hours, colors }
+  } = useSelector(({ calendarReducer: { currentMonth, selectedDate, reminders, currentReminder } }) => {
+    return { currentMonth, selectedDate, reminders, currentReminder }
   })
   const [openDialog, setOpenDialog] = useState(false)
   const [dateToAdd, setDateToAdd] = useState(null)
-  const [errors, setErrors] = useState(null)
-  const [viewReminder, setViewReminder] = useState(false)
-
-  const [formValues, handleInputChange, reset] = useForm({
-    description: '',
-    color: '',
-    city: '',
-    time: '',
-  })
-  const { description, color, city, time } = formValues
+  const [viewReminderMode, setViewReminderMode] = useState('')
   const dispatch = useDispatch()
 
   const renderHeader = () => {
-    const dateFormat = "MMMM yyyy";
+    const dateFormat = "MMMM yyyy"
     return (
       <div className="header row flex-middle">
         <div className="col col-start">
@@ -67,34 +58,32 @@ export default function Calendar () {
           <div className="icon">chevron_right</div>
         </div>
       </div>
-    );
+    )
   }
-
   const renderDays = () => {
-    const dateFormat = "EEEE";
-    const days = [];
+    const dateFormat = "EEEE"
+    const days = []
 
-    let startDate = startOfWeek(currentMonth);
+    let startDate = startOfWeek(currentMonth)
 
     for (let i = 0; i < 7; i++) {
       days.push(
         <div className="col col-center" key={i}>
           {format(addDays(startDate, i), dateFormat)}
         </div>
-      );
+      )
     }
 
-    return <div className="days row">{days}</div>;
+    return <div className="days row">{days}</div>
   }
 
   const onDateClick = day => {
-    console.log('day', day)
     dispatch({ type: SELECT_DAY, payload: day })
-  };
+  }
 
   const nextMonth = () => {
     dispatch({ type: SET_NEXT_MONTH, payload: addMonths(currentMonth, 1) })
-  };
+  }
 
   const prevMonth = () => {
     dispatch({ type: SET_PREV_MONTH, payload: subMonths(currentMonth, 1) })
@@ -170,7 +159,7 @@ export default function Calendar () {
                 hours.map((hour) => {
                   return (
                     <option 
-                      value={hour.replace(':', '')} 
+                      value={hour} 
                       key={hour}
                     >
                       {hour}
@@ -188,97 +177,70 @@ export default function Calendar () {
     )
   }
 
-  const renderReminderDialog = () => {
+  const renderReminderDialog = (mode) => {
     return (
       <Reminder 
         reminder={currentReminder}
-        open={viewReminder}
-        setOpen={setViewReminder}
+        open={openDialog}
+        dateToAdd={dateToAdd}
+        setOpen={setOpenDialog}
+        viewReminderMode={mode}
+        setViewReminderMode={setViewReminderMode}
       />
     )
   }
 
-  const launchDialog = (e) => {
-    
-    console.log('e', e)
-    reset()
-    setOpenDialog(true);
-    setDateToAdd(e)
-  }
-
-  const addReminder = async (e) => {
-    e.preventDefault()
-
-    setErrors(null)
-    
-    const errs = validateForm(formValues)
-    setErrors(errs)
-    
-    if (!errs) {
-
-      const { data } = await axios({
-        baseURL: `https://api.openweathermap.org`,
-        url: `/data/2.5/forecast/daily?q=${formValues.city}&cnt=16&appid=${process.env.REACT_APP_API_KEY}`,
-        method: 'GET',
-      })
-
-      const dateDiff = new Date(dateToAdd).getDate() - new Date().getDate()
-
-      const newReminder = {
-        ...formValues,
-        id: uuidv4(),
-        date: dateToAdd.toString(),
-        forecast: `${data.list[dateDiff].weather[0].description}`,
-        temperature: `${Math.floor(data.list[dateDiff].temp.day - 273)}`
-      }
-  
-      dispatch({type: SET_REMINDER, payload: newReminder })
-      setOpenDialog(false)
-    }
-    
-    
+  const createReminder = (date) => {
+    setViewReminderMode('Create')
+    setOpenDialog(true)
+    setDateToAdd(date)
   }
 
   const showReminder = (reminder) => {
-    console.log('mostrar reminder', reminder)
-    setViewReminder(true)
+    setOpenDialog(true)
+    setViewReminderMode('View')
     dispatch({ type: SET_CURRENT_REMINDER, payload: reminder })
   }
 
-  const orderReminders = (reminders) => {
-    if (reminders.length < 2) return reminders
+  const deleteReminders = (date) => {
+    console.log('date', date)
+    dispatch({type: DELETE_REMINDERS, payload: date})
+  }
 
-    let orderedReminders = []
-    let parsedTime = reminders.map(reminder => {
-      reminder.time = parseInt(reminder.time)
-      return reminder
-    })
-
-    orderedReminders = parsedTime.sort((a, b) => a.time - b.time)
-    return orderedReminders
+  const orderReminders = (unorderedReminders) => {
+    if (unorderedReminders.length < 2) {
+      return unorderedReminders
+    } else {
+    
+      unorderedReminders.sort((a, b) => {
+        if (a.time < b.time) {
+          return -1
+        }
+        if (a.time > b.time) {
+          return 1
+        }
+        return 0
+      })
+      return unorderedReminders
+    }
   }
 
   const renderCells = () => {
-    //const monthStart = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-    const monthStart = startOfMonth(currentMonth);
-    //const monthEnd = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
-    const monthEnd = endOfMonth(monthStart);
-    const startDate = startOfWeek(monthStart);
-    console.log('startDate', startDate)
-    const endDate = endOfWeek(monthEnd);
-    //const startDate = new Date(monthStart.setDate(monthStart.getDate() - monthStart.getDay()))
-    //const endDate = new Date(monthEnd.setDate(monthEnd.getDate() + 6 - monthEnd.getDay()))
+    const monthStart = startOfMonth(currentMonth)
+    const monthEnd = endOfMonth(monthStart)
+    const startDate = startOfWeek(monthStart)
+    const endDate = endOfWeek(monthEnd)
 
-    const dateFormat = "d";
-    const rows = [];
-    let days = [];
-    let day = startDate;
-    let formattedDate = "";
+    const dateFormat = "d"
+    const rows = []
+    let days = []
+    let day = startDate
+    let formattedDate = ""
 
     while (day <= endDate) {
       for (let i = 0; i < 7; i++) {
-        formattedDate = format(day, dateFormat);
-        const cloneDay = day;
+        formattedDate = format(day, dateFormat)
+        const cloneDay = day
         days.push(
           <div
             className={`col cell ${
@@ -291,12 +253,14 @@ export default function Calendar () {
             <span 
               className="number"
               onClick={() => onDateClick(parse(cloneDay, 'yyyy-MMMM-dd', new Date()))}
-            >{formattedDate}</span>
+            >
+              {formattedDate}
+            </span>
             <span className="bg">{formattedDate}</span>
             {new Date(cloneDay) >= new Date() && isSameMonth(day, monthStart) &&
               <IconButton 
                 style={{ padding: '0px' }} 
-                onClick={() => launchDialog(cloneDay)}
+                onClick={() => createReminder(cloneDay)}
                 title='Add reminder'
               >
                 <ControlPointIcon
@@ -304,9 +268,25 @@ export default function Calendar () {
                   style={{ color: 'grey', fontSize: '1.5rem' }}
                 />
               </IconButton>}
-            {reminders[cloneDay] && reminders[cloneDay].length > 0 && orderReminders(reminders[cloneDay]).map(reminder => {
+            {!!reminders && reminders.findIndex(reminder => reminder.date == cloneDay.toString()) !== -1 && 
+              <IconButton 
+                style={{ 
+                  padding: '0px',
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0
+                }} 
+                onClick={() => deleteReminders(cloneDay.toString())}
+                title='Delete reminders'
+              >
+                <DeleteIcon
+                  className='delete-remainder-icon'
+                  style={{ color: 'grey', fontSize: '1.5rem' }}
+                />
+              </IconButton>}
+            {!!reminders && reminders.findIndex(reminder => reminder.date == cloneDay.toString()) !== -1 && 
+              orderReminders(reminders.filter(rem => rem.date == cloneDay.toString())).map(reminder => {
               if (reminder.date === cloneDay.toString()) {
-                console.log('recordatorio', reminder)
                 return (
                   <div 
                     className="reminder-outer-div"
@@ -325,32 +305,26 @@ export default function Calendar () {
               }
             })}
           </div>
-        );
-        day = addDays(day, 1);
+        )
+        day = addDays(day, 1)
       }
 
       rows.push(
         <div className="row" key={day}>
           {days}
         </div>
-      );
-      days = [];
+      )
+      days = []
     }
 
-    return <div className="body">{rows}</div>;
+    return <div className="body">{rows}</div>
   }
-
-  
-  console.log('reminders', reminders)
-  console.log('currentReminder', currentReminder)
-
   return (
     <div className="calendar">
       {renderHeader()}
       {renderDays()}
       {renderCells()}
-      {renderDialog()}
-      {renderReminderDialog()}
+      {renderReminderDialog(viewReminderMode)}
     </div>
   )
 }

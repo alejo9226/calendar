@@ -1,15 +1,14 @@
 import { Dialog, DialogContent, DialogTitle, setRef } from "@material-ui/core"
 import { useState } from "react"
 import { useSelector } from "react-redux"
-import { formatShortDate } from '../utils/formatDate'
+import { formatShortDate, formatTime } from '../utils/formatDate'
 import { useForm } from "../utils/hooks/useForm"
 
-export default function ViewReminder ({ open, setOpen, setEditMode }) {
+export default function ViewReminder ({ open, setOpen, setEditMode, setViewReminderMode }) {
 
   const { currentReminder } = useSelector(({ calendarReducer: { currentReminder } }) => {
     return { currentReminder }
   })
-  
   return (
     <div className="view-modal">
       <div
@@ -43,7 +42,8 @@ export default function ViewReminder ({ open, setOpen, setEditMode }) {
             justifyContent: 'space-between',
             alignItems: 'baseline',
             padding: '0 10px',
-            marginTop: '20px'
+            marginTop: '20px',
+            marginBottom: '10px'
           }}
         >
           <div
@@ -63,7 +63,9 @@ export default function ViewReminder ({ open, setOpen, setEditMode }) {
             }}
           >
             <span className="key">Time</span>
-            <span className="value">{currentReminder?.time}</span>
+            <span 
+              className="value"
+            >{currentReminder?.time}</span>
           </div>
         </div>
         <div
@@ -86,7 +88,18 @@ export default function ViewReminder ({ open, setOpen, setEditMode }) {
             <span className="key">Description</span>
             <span className="value__description">{currentReminder?.description}</span>
           </div>
-          <button className="edit__button" onClick={() => setEditMode(true)}>Editar</button>
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              alignItems: 'baseline',
+              margin: '0px 0'
+            }}
+          >
+            <span className="key">Color</span>
+            <span className="value">{currentReminder?.color}</span>
+          </div>
+          <button className="edit__button" onClick={() => setViewReminderMode('Edit')}>Editar</button>
         </div>
       </div>
     </div>
