@@ -6,7 +6,7 @@ import { formatShortDate, formatTime } from '../utils/formatDate'
 import { useForm } from "../utils/hooks/useForm"
 import { validateForm } from "../utils/validations"
 import { v4 as uuidv4 } from 'uuid'
-import { SET_REMINDER } from "../store/calendarReducer"
+import { createReminder, SET_REMINDER } from "../store/calendarReducer"
 
 export default function CreateReminder ({ dateToAdd, open, setOpen, setOpenDialog, setEditMode }) {
   const dispatch = useDispatch()
@@ -25,38 +25,19 @@ export default function CreateReminder ({ dateToAdd, open, setOpen, setOpenDialo
 
   const addReminder = async (e) => {
     e.preventDefault()
-
     setErrors(null)
     
     const errs = validateForm(formValues)
     setErrors(errs)
     
     if (!errs) {
-
-      const { data } = await axios({
-        baseURL: `https://api.openweathermap.org`,
-        url: `/data/2.5/forecast/daily?q=${formValues.city}&cnt=16&appid=${process.env.REACT_APP_API_KEY}`,
-        method: 'GET',
-      })
-
-      const dateDiff = new Date(dateToAdd).getDate() - new Date().getDate()
-
-      const newReminder = {
-        ...formValues,
-        id: uuidv4(),
-        date: dateToAdd.toString(),
-        forecast: `${data.list[dateDiff].weather[0].description}`,
-        temperature: `${Math.floor(data.list[dateDiff].temp.day - 273)}`
-      }
-      dispatch({type: SET_REMINDER, payload: newReminder })
       setOpen(false)
+      dispatch(createReminder(formValues, dateToAdd))
     }
-    
-    
   }
 
   return (
-    <form onSubmit={addReminder}>
+    <form onSubmit={addReminder} data-testid='create-reminder'>
       <label htmlFor='description'>
         Description
       </label>
@@ -79,7 +60,7 @@ export default function CreateReminder ({ dateToAdd, open, setOpen, setOpenDialo
         onChange={handleInputChange} 
         required
       />
-      <label htmlFor='unit'>Color</label>
+      <label htmlFor='color'>Color</label>
       <select
         type='text'
         name='color'
@@ -103,7 +84,7 @@ export default function CreateReminder ({ dateToAdd, open, setOpen, setOpenDialo
             )
           })}
       </select>
-      <label htmlFor='unit'>Time</label>
+      <label htmlFor='time'>Time</label>
       <select
         type='text'
         name='time'
