@@ -228,6 +228,7 @@ header {
 
 .reminder-description {
   margin: 0;
+  padding: 0 5px;
   color: white;
 }
 .reminder-description:hover {
@@ -288,6 +289,13 @@ header {
   padding: 5px 10px;
   border-radius: 5px;
   display: block;
+}
+
+.create__button {
+  margin: 10px auto 0;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
 .view-modal {
