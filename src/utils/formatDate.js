@@ -17,3 +17,8 @@ export const formatTime = (time) => {
     return `0${time.toString().charAt(0)}:${time.toString().substr(time.toString().length - 2)}`
   }
 }
+
+export const daysSubstract = (date) => {
+  let dateDiff = new Date(date) - new Date() 
+  return Math.ceil(dateDiff / (1000 * 60 * 60 * 24))
+} 

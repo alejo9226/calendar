@@ -167,7 +167,7 @@ export default function Calendar () {
             >
               {formattedDate}
             </span>
-            <span className="bg">{formattedDate}</span>
+            {/* <span className="bg">{formattedDate}</span> */}
             {new Date(cloneDay) >= new Date() && isSameMonth(day, monthStart) &&
               <IconButton 
                 style={{ padding: '0px' }} 
@@ -206,7 +206,8 @@ export default function Calendar () {
                     onClick={showReminder.bind(this, reminder)}
                     style={{
                       backgroundColor: reminder.color,
-                      margin: 0
+                      margin: 0,
+                      padding: '0 5px'
                     }}
                     key={reminder.id}
                   >
