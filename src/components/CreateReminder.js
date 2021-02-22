@@ -31,6 +31,7 @@ export default function CreateReminder ({ dateToAdd, open, setOpen, setOpenDialo
     setErrors(errs)
     
     if (!errs) {
+
       setOpen(false)
       dispatch(createReminder(formValues, dateToAdd))
     }
@@ -84,6 +85,7 @@ export default function CreateReminder ({ dateToAdd, open, setOpen, setOpenDialo
             )
           })}
       </select>
+
       <label htmlFor='time'>Time</label>
       <select
         type='text'
