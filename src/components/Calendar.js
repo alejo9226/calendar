@@ -168,7 +168,7 @@ export default function Calendar () {
               {formattedDate}
             </span>
             {/* <span className="bg">{formattedDate}</span> */}
-            {new Date(cloneDay) >= new Date() && isSameMonth(day, monthStart) &&
+            {new Date(cloneDay) > new Date() - (1000 * 60 * 60 * 24) && isSameMonth(day, monthStart) &&
               <IconButton 
                 style={{ padding: '0px' }} 
                 onClick={() => createReminder(cloneDay)}
