@@ -1,4 +1,6 @@
 import thunk from 'redux-thunk'
+import { v4 as uuidv4 } from 'uuid'
+import axios from 'axios'
 export const SET_NEXT_MONTH = 'SET_NEXT_MONTH'
 export const SET_PREV_MONTH = 'SET_PREV_MONTH'
 export const SELECT_DAY = 'SELECT_DAY'
@@ -7,6 +9,29 @@ export const EDIT_REMINDER = 'EDIT_REMINDER'
 export const DELETE_REMINDERS = 'DELETE_REMINDERS'
 export const SET_CURRENT_REMINDER = 'SET_CURRENT_REMINDER'
 export const CLEAR_CURRENT_REMINDER = 'CLEAR_CURRENT_REMINDER'
+
+export function createReminder (formValues, dateToAdd) {
+  return async function (dispatch) {
+    try {
+      const { data } = await axios({
+        baseURL: `https://api.openweathermap.org`,
+        url: `/data/2.5/forecast/daily?q=${formValues.city}&cnt=16&appid=${process.env.REACT_APP_API_KEY}`,
+        method: 'GET',
+      })
+      const dateDiff = new Date(dateToAdd).getDate() - new Date().getDate()
+      const newReminder = {
+        ...formValues,
+        id: uuidv4(),
+        date: dateToAdd.toString(),
+        forecast: `${data.list[dateDiff].weather[0].description}`,
+        temperature: `${Math.floor(data.list[dateDiff].temp.day - 273)}`
+      }
+      dispatch({type: SET_REMINDER, payload: newReminder })
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
+}
 
 const colors = [
   {
