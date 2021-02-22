@@ -238,6 +238,7 @@ main {
 
 .reminder-description {
   margin: 0;
+  padding: 0 5px;
   color: white;
 }
 .reminder-description:hover {
@@ -294,6 +295,13 @@ main {
 
 .edit__button {
   margin: 20px auto 0;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.create__button {
+  margin: 10px auto 0;
   box-sizing: border-box;
   padding: 5px 10px;
   border-radius: 5px;
