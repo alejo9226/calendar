@@ -87,94 +87,6 @@ export default function Calendar () {
 
   const prevMonth = () => {
     dispatch({ type: SET_PREV_MONTH, payload: subMonths(currentMonth, 1) })
-  };
-
-  const renderDialog = (e) => {
-    return (
-      <Dialog 
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        className="add-reminder-modal"
-      >
-        <DialogActions>
-          <form onSubmit={addReminder}>
-            <label htmlFor='description'>
-              Description
-            </label>
-            <input 
-              type="text"
-              id="description"
-              name="description"
-              value={description}
-              onChange={handleInputChange} 
-              required
-            />
-            <label htmlFor='city'>
-              City
-            </label>
-            <input 
-              type="text"
-              id="city"
-              name="city"
-              value={city}
-              onChange={handleInputChange} 
-              required
-            />
-            <label htmlFor='unit'>Color</label>
-            <select
-              type='text'
-              name='color'
-              id='color'
-              value={color}
-              onChange={handleInputChange}
-              required
-            >
-              <option>Choose color</option>
-              {!!colors &&
-                colors.length > 0 &&
-                colors.map((color) => {
-                  return (
-                    <option 
-                      value={color.name} 
-                      key={color.name}
-                      style={{ backgroundColor: color.color }}
-                    >
-                      {color.name}
-                    </option>
-                  )
-                })}
-            </select>
-            <label htmlFor='unit'>Time</label>
-            <select
-              type='text'
-              name='time'
-              id='time'
-              value={time}
-              onChange={handleInputChange}
-              required
-            >
-              <option>Choose time</option>
-              {!!hours &&
-                hours.length > 0 &&
-                hours.map((hour) => {
-                  return (
-                    <option 
-                      value={hour} 
-                      key={hour}
-                    >
-                      {hour}
-                    </option>
-                  )
-                })}
-            </select>
-            {errors && <p className="contentInput__error">{errors}</p>}
-            <button type="submit">
-              Add reminder
-            </button>
-          </form>
-        </DialogActions>
-      </Dialog>
-    )
   }
 
   const renderReminderDialog = (mode) => {
@@ -203,7 +115,6 @@ export default function Calendar () {
   }
 
   const deleteReminders = (date) => {
-    console.log('date', date)
     dispatch({type: DELETE_REMINDERS, payload: date})
   }
 
@@ -256,12 +167,13 @@ export default function Calendar () {
             >
               {formattedDate}
             </span>
-            <span className="bg">{formattedDate}</span>
+            {/* <span className="bg">{formattedDate}</span> */}
             {new Date(cloneDay) >= new Date() && isSameMonth(day, monthStart) &&
               <IconButton 
                 style={{ padding: '0px' }} 
                 onClick={() => createReminder(cloneDay)}
                 title='Add reminder'
+                data-testid='add-reminder-button'
               >
                 <ControlPointIcon
                   className='add-remainder-icon'
@@ -289,11 +201,13 @@ export default function Calendar () {
               if (reminder.date === cloneDay.toString()) {
                 return (
                   <div 
+                    data-testid="reminder"
                     className="reminder-outer-div"
                     onClick={showReminder.bind(this, reminder)}
                     style={{
                       backgroundColor: reminder.color,
-                      margin: 0
+                      margin: 0,
+                      padding: '0 5px'
                     }}
                     key={reminder.id}
                   >

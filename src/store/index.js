@@ -6,7 +6,7 @@ export const SET_NEXT_MONTH = 'SET_NEXT_MONTH'
 export const SET_PREV_MONTH = 'SET_PREV_MONTH'
 export const SELECT_DAY = 'SELECT_DAY'
 
-const rootReducer = combineReducers({ 
+export const rootReducer = combineReducers({ 
   calendarReducer, 
 })
 
