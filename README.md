@@ -31,6 +31,14 @@ npm run start
 ```
 _That's it!, you're done_
 
+### Testing
+
+To run the tests:
+
+```
+yarn test
+```
+
 ## Technologies
 
 _Most important technologies for the completion of the project_
