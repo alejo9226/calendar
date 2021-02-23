@@ -1,2 +1,41 @@
-# calendar
-This app displays remainders
+# Calendar
+
+_This web app allows users for creating, editing and deleting reminders_
+
+### Getting started
+
+To run the project on your local machine follow this instructions:
+
+_Clone the app into your local machine_
+```
+git clone https://github.com/alejo9226/calendar.git
+```
+
+_Install all dependencies on your local environment_
+```
+yarn
+```
+or
+```
+npm install
+```
+_Start the project_
+```
+yarn start
+```
+or
+```
+npm run start
+```
+_That's it!, you're done_
+
+## Technologies
+
+_Most important technologies for the completion of the project_
+
+- [ReactJs](https://es.reactjs.org/)
+- [Redux](https://es.redux.js.org/)
+- [Axios](https://www.npmjs.com/package/axios)
+- [Date-fns](https://www.npmjs.com/package/date-fns)
+- [Material-UI](https://www.npmjs.com/package/@material-ui/core)
+- [OpenWeatherAPI](https://openweathermap.org/api)
