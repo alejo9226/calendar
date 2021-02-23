@@ -19,6 +19,7 @@ or
 ```
 npm install
 ```
+_Add .env file at folder root adding a REACT_APP_API_KEY var with OpenWeather API key_
 _Start the project_
 ```
 yarn start
