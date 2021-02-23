@@ -6,12 +6,12 @@ _This web app allows users for creating, editing and deleting reminders_
 
 To run the project on your local machine follow this instructions:
 
-_Clone the app into your local machine_
+_1. Clone the app into your local machine_
 ```
 git clone https://github.com/alejo9226/calendar.git
 ```
 
-_Install all dependencies on your local environment_
+_2. Install all dependencies on your local environment_
 ```
 yarn
 ```
@@ -19,9 +19,9 @@ or
 ```
 npm install
 ```
-_Add .env file at folder root adding a REACT_APP_API_KEY var with OpenWeather API key_
+_3. Add .env file at folder root adding a REACT_APP_API_KEY var with OpenWeather API key_
 
-_Start the project_
+_4. Start the project_
 ```
 yarn start
 ```
