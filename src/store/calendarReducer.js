@@ -123,7 +123,6 @@ function calendarReducer(state = initialState, action) {
       }
     case DELETE_REMINDERS: 
       const filteredReminders = state.reminders.filter(reminder => reminder.date !== action.payload)
-      console.log('filteredReminders', filteredReminders)
       return {
         ...state,
         reminders: [...filteredReminders]

@@ -26,8 +26,12 @@ export default function CreateReminder ({ dateToAdd, open, setOpen, setOpenDialo
   const addReminder = async (e) => {
     e.preventDefault()
     setErrors(null)
-    
-    const errs = validateForm(formValues)
+
+    const formPlusDate = {
+      ...formValues,
+      date: dateToAdd.toString()
+    }
+    const errs = validateForm(formPlusDate)
     setErrors(errs)
     
     if (!errs) {
