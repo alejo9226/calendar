@@ -26,9 +26,8 @@ npm install
 
 ## Technologies
 
-_Las herramientas para el desarrollo de la APP fueron_
+_Most important technologies for the completion of the project_
 
 - [ReactJs](https://es.reactjs.org/) - JS most popular library
 - [Redux](https://es.redux.js.org/)
-- [Axios](https://www.npmjs.com/package/axios)
 - [Axios](https://www.npmjs.com/package/axios)

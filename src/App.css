@@ -1,30 +1,11 @@
 /* FONT IMPORTS */
 
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
-@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
-
-.icon {
-  font-family: "Material Icons", serif;
-  font-style: normal;
-  display: inline-block;
-  vertical-align: middle;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "liga";
-}
 
 /* VARIABLES */
 
 :root {
-  --main-color: #1a8fff;
+  --main-color: #3e5a74;
   --text-color: #777;
   --text-color-light: #ccc;
   --border-color: #eee;
@@ -39,7 +20,7 @@
 }
 
 body {
-  font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 1em;
   font-weight: 300;
   line-height: 1.5;
@@ -109,6 +90,7 @@ header {
   font-weight: 700;
   font-size: 115%;
   padding: 1.5em 0;
+  align-items: center;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -118,9 +100,8 @@ header {
 }
 
 .calendar .header .icon:hover {
-  transform: scale(1.75);
+  transform: scale(1.2);
   transition: 0.25s ease-out;
-  color: var(--main-color);
 }
 
 .calendar .header .icon:first-of-type {
@@ -161,7 +142,7 @@ header {
 
 .calendar .body .selected {
   border-left: 10px solid transparent;
-  border-image: linear-gradient(45deg, #3e5a74 0%, #6eacbe 40%);
+  border-image: linear-gradient(45deg, --main-color 0%, #6eacbe 40%);
   border-image-slice: 1;
 }
 
@@ -195,19 +176,6 @@ header {
   pointer-events: none;
 }
 
-.calendar .body .cell .bg {
-  font-weight: 700;
-  line-height: 1;
-  color: var(--main-color);
-  opacity: 0;
-  font-size: 8em;
-  position: absolute;
-  top: -0.2em;
-  right: -0.05em;
-  transition: 0.25s ease-out;
-  letter-spacing: -0.07em;
-}
-
 .calendar .body .cell:hover .bg,
 .calendar .body .selected .bg {
   opacity: 0.05;
@@ -219,6 +187,10 @@ header {
   flex-basis: calc(100% / 7);
   width: calc(100% / 7);
   overflow: scroll;
+}
+
+.calendar .body .weekend {
+  background-color: var(--bg-color);
 }
 
 .add-reminder-modal {

@@ -6,6 +6,7 @@ import {
   startOfMonth,
   endOfMonth,
   parse,
+  isWeekend,
   isSameMonth,
   isSameDay,
   addMonths,
@@ -14,7 +15,9 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import { SET_NEXT_MONTH, SET_PREV_MONTH, SELECT_DAY } from '../store'
 import ControlPointIcon from '@material-ui/icons/ControlPoint'
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import { IconButton, Dialog, DialogActions } from '@material-ui/core'
 import { useState } from "react"
 import { useForm } from "../utils/hooks/useForm"
@@ -45,17 +48,26 @@ export default function Calendar () {
     return (
       <div className="header row flex-middle">
         <div className="col col-start">
-          <div className="icon" onClick={prevMonth}>
+          {/* <div className="icon" onClick={prevMonth}>
             chevron_left
-          </div>
+          </div> */}
+          <IconButton className="icon" onClick={prevMonth}>
+            <ArrowBackIosIcon 
+              style={{ color: 'grey', fontSize: '1.2rem' }}
+            />
+          </IconButton>
         </div>
         <div className="col col-center">
           <span>
             {format(currentMonth, dateFormat)}
           </span>
         </div>
-        <div className="col col-end" onClick={nextMonth}>
-          <div className="icon">chevron_right</div>
+        <div className="col col-end">
+          <IconButton className="icon" onClick={nextMonth}>
+            <ArrowForwardIosIcon 
+              style={{ color: 'grey', fontSize: '1.2rem' }}
+            />
+          </IconButton>
         </div>
       </div>
     )
@@ -157,17 +169,17 @@ export default function Calendar () {
             className={`col cell ${
               !isSameMonth(day, monthStart)
                 ? "disabled"
-                : isSameDay(day, selectedDate) ? "selected" : ""
+                : isSameDay(day, selectedDate) ? "selected" : "" 
+            } ${
+              isWeekend(day) ? "weekend" : ""
             }`}
             key={day}
           >
             <span 
               className="number"
-              onClick={() => onDateClick(parse(cloneDay, 'yyyy-MMMM-dd', new Date()))}
             >
               {formattedDate}
             </span>
-            {/* <span className="bg">{formattedDate}</span> */}
             {new Date(cloneDay) > new Date() - (1000 * 60 * 60 * 24) && isSameMonth(day, monthStart) &&
               <IconButton 
                 style={{ padding: '0px' }} 
